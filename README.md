@@ -1,15 +1,15 @@
 This work presents a navigation model at the highest level of abstraction with the agent reasoning over motions from room to room. 
-It is a solution decision making and planning in a biologically inspired way without pre-training. 
+It is a solution for decision-making and planning in a biologically inspired way without pre-training. 
 
 Observations are considered filtered from RGB to a single colour integer by a sub-process.
-The image below gives an example of the whole pipeline where, from left to right, you can see what a minigrid environment is expected to look like, what the highest level receives as input (single colour info, corresponding to the floor colour) and what the model generates as a topological map once it has finished exploring
+The image below gives an example of the whole pipeline, where, from left to right, you can see what a minigrid environment is expected to look like, what the highest level receives as input (single colour info, corresponding to the floor colour) and what the model generates as a topological map once it has finished exploring
 
 For testing purposes, the colour indexes have been set, but the model could generate the integers internally as it sees new observations. 
 
 ![example](git_img/from_env_to_agent_2.jpg)
 
-See below the agent choosing rooms in a full minigrid environement. 
-As reference, this gif was obtained in two levels. The agent decides on where to go given doors detection and floor colour, the second is navigating toward the desired direction. This second layer is not presented in this repository. 
+See below the agent choosing rooms in a full minigrid environment. 
+As a reference, this GIF was obtained in two levels. The agent decides on where to go given doors detection and floor colour, the second is navigating toward the desired direction. This second layer is not presented in this repository. 
 
 ![gif](git_img/representation_state_growth.gif)
 ## Setup
@@ -19,6 +19,8 @@ From the higher_level_nav repository:
 docker built -t high_nav .
 ./launch_docker.sh 
 ```
+## Disclaimer
+This branch is a copy of the repository: https://github.com/my-name-is-D/high_level_nav_planning
 
 ## Tests
 
@@ -27,7 +29,7 @@ Exploration:
 python3 navigation_testbench.py --inf_algo 'VANILLA' --env grid_donut --model ours_v4_2 --max_steps 2 -p 0 -p 0
 ```
 
-Goal oriented (can also work without loading models):
+Goal-oriented (can also work without loading models):
 ```
 python3 navigation_testbench.py --load_model results/grid_donut/ours_exploration/ours_v4_2_MMP/ours_v4_2_MMP_2024-02-27-09-32-43/ours_v4_2_MMP.pkl --inf_algo 'MMP' --env grid_donut --model ours_v4_2_MMP --max_steps 15 -p 0 -p 0 --goal 12 --stop_condition goal_reached
 ```
@@ -57,22 +59,22 @@ We are based upon pymdp, with some small modifications to allow dynamic growth o
 
 `--stop_condition`: failsafe to stop the model when it reaches a particular condition. Mainly used to stop the program once we find the goal, else the agent continues up to the end of its max steps. 
 
-Additionnally, you can play with the lenght of the policies `model.policy_len` and the preference weight `pref_weight` in `navigation_benchmark.py` .
+Additionally, you can play with the lenght of the policies `model.policy_len` and the preference weight `pref_weight` in `navigation_benchmark.py` .
 
-The goal comportment here is set as purely exploitative, you can modify this by setting to True `self.use_states_info_gain` in `agent.py` -> `goal_oriented_navigation()` 
+The goal comportment here is set as purely exploitative; you can modify this by setting to True `self.use_states_info_gain` in `agent.py` -> `goal_oriented_navigation()` 
 I do not recommend setting to True the use_param_info_gain, didn't observe improvements in exploration. 
-I also do not recommand to set to true `lookahead_distance` as the results were not concluding.
+I also do not recommand to set to true `lookahead_distance` to true as the results were not concluding.
 
 
 ## Versionning
 All versions can only go toward cardinal directions or stay in the current locations.
 
-Ours_v3: VANILLA type navigation with state inferred on latest action, observation A and B
+Ours_v3: VANILLA type navigation with state inferred on the latest action, observation A and B
 
 Ours_v4: either VANILLA or MMP type navigation (switchable whenever during run -tried from MMP to VANILLA, not the contrary-), state inferring improved.
 
 Ours_v4_2: added linear increase of policies, policies of different lengths and the lookahead is a distance instead of the number of consecutive actions. Useless policies like 4x STAY or move to stay move or left-right have been removed, transforming an exponential increase of policies with a lookahead to a linear (or polynomial with STAY) problem. 
-A lot of variables to play around with, most unused after verifying they are not good options. If you find variables that are not defined in the Readme, they are probably not interesting to play with and are not improving the model. 
+A lot of variables to play around with, most of which are unused after verifying they are not good options. If you find variables that are not defined in the Readme, they are likely not relevant to explore and do not contribute to model improvement. 
 
 ## environements
 
@@ -80,7 +82,7 @@ See below all the environments that could be chosen:
 
 ![envs](git_img/envs.png)
 
-You can create new envs in envs/minigrid.py, they have to start with "grid" to be recognised as minigrid envs by the automatic benchmark. 
+You can create new envs in `envs/minigrid.py`, they have to start with "grid" to be recognised as minigrid envs by the automatic benchmark. 
 
 
 ## Cite
