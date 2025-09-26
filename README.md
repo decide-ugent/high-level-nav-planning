@@ -88,7 +88,7 @@ You can create new envs in `envs/minigrid.py`, they have to start with "grid" to
 ## Cite
 
 For further information about this work, refer to:
-
+```
 @article{de_Tinguy_2024,
    title={Learning dynamic cognitive map with autonomous navigation},
    volume={18},
@@ -100,3 +100,4 @@ For further information about this work, refer to:
    author={de Tinguy, Daria and Verbelen, Tim and Dhoedt, Bart},
    year={2024},
    month=dec }
+```
